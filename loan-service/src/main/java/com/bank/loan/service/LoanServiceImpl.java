@@ -1,7 +1,10 @@
 package com.bank.loan.service;
 
 import com.bank.loan.ILoanService;
+import com.bank.loan.dto.LoanDTO;
 import jakarta.enterprise.context.ApplicationScoped;
+
+import java.math.BigDecimal;
 
 @ApplicationScoped
 public class LoanServiceImpl implements ILoanService {
@@ -12,4 +15,9 @@ public class LoanServiceImpl implements ILoanService {
 
     @Override
     public void createLoan(){};
+
+    @Override
+    public LoanDTO getLoan(){
+        return new LoanDTO("80959309", BigDecimal.valueOf(250000));
+    }
 }

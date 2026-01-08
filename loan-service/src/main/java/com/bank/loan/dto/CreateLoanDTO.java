@@ -8,10 +8,10 @@ import java.util.Set;
 public record CreateLoanDTO(BigDecimal amount,
                             BigDecimal interestRate,
                             int termInMonths,
-                            LoanInterestPeriod interestPeriodFrequency,
-                            Set<CreateAccountRelativeDTO> relatives,
+//                            LoanInterestPeriod interestPeriodFrequency,
+//                            Set<CreateAccountRelativeDTO> relatives,
                             String type,
                             String currency,
-                            AccountSignType signType,
+//                            AccountSignType signType,
                             LocalDate firstPaymentDate) {
 }
