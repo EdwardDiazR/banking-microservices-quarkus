@@ -20,4 +20,6 @@ public class LoanServiceImpl implements ILoanService {
     public LoanDTO getLoan(){
         return new LoanDTO("100120", BigDecimal.valueOf(250000));
     }
+
+
 }
