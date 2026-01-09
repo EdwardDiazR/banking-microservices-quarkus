@@ -28,9 +28,9 @@ public class LoanResource {
     }
 
     @GET
-    @Path("get")
+    @Path("{loanNumber}")
     @Produces(MediaType.APPLICATION_JSON)
-    public LoanDTO createLoan() {
+    public LoanDTO getLoanByLoanNumber() {
         return _loanService.getLoan();
     }
 }

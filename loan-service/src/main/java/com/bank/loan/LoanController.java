@@ -3,10 +3,8 @@ package com.bank.loan;
 
 import com.bank.loan.dto.LoanDTO;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 import java.math.BigDecimal;
 
@@ -27,4 +25,5 @@ public class LoanController {
     public String getLoanId(@QueryParam("id") String id){
         return id;
     }
+
 }
