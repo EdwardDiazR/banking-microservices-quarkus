@@ -1,4 +1,4 @@
-package com.bank;
+package com.bank.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,5 +13,5 @@ public class Customer {
     private int age;
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdateDate;
-
+    public Address address;
 }
