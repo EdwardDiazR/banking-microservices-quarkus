@@ -1,6 +1,8 @@
 package com.bank.loan.service;
 
 import com.bank.loan.ILoanService;
+import com.bank.loan.Loan;
+import com.bank.loan.dto.CreateLoanDTO;
 import com.bank.loan.dto.LoanDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -14,7 +16,9 @@ public class LoanServiceImpl implements ILoanService {
     public void getLoanByFinancialProductNumber(){}
 
     @Override
-    public void createLoan(){};
+    public void createLoan(CreateLoanDTO loanDTO){
+        Loan loan = new Loan();
+    };
 
     @Override
     public LoanDTO getLoan(){

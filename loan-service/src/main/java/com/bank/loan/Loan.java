@@ -1,6 +1,5 @@
 package com.bank.loan;
 
-
 import com.bank.loan.constants.LoanStatus;
 import com.bank.loan.constants.PaymentFrequency;
 
@@ -14,7 +13,7 @@ public class Loan {
     // IDENTIFICACIÓN GENERAL
     // =========================================================
 
-    private Long id;
+    public Long id;
 //    private FinancialProduct financialProduct;
     private LoanStatus status;
     private String type;

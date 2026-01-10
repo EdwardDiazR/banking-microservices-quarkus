@@ -40,6 +40,6 @@ public class LoanResource {
     @Path("change-payment-date")
     public Response changePaymentDate(){
         return Response.ok("Date changed successfully").build();
-
     }
+
 }
