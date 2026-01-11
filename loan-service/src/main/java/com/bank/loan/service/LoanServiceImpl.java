@@ -7,6 +7,7 @@ import com.bank.loan.dto.LoanDTO;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @ApplicationScoped
 public class LoanServiceImpl implements ILoanService {
@@ -25,5 +26,8 @@ public class LoanServiceImpl implements ILoanService {
         return new LoanDTO("100120", BigDecimal.valueOf(250000));
     }
 
+    public void changePaymentDate(Long loanId,LocalDate newPaymentDate){
+
+    }
 
 }
