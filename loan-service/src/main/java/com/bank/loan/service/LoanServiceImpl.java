@@ -20,6 +20,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @ApplicationScoped
@@ -51,7 +52,9 @@ public class LoanServiceImpl implements ILoanService {
         return loanRepository.getById(id).orElseThrow(()-> new NotFoundException("Prestamo no encontrado"));
     }
 
-    public void getLoanByProductId(Long productId) {}
+    public Loan getLoanByProductId(Long productId) {
+        return loanRepository.getByProductId(productId).orElseThrow();
+    }
 
     @Override
     @Transactional

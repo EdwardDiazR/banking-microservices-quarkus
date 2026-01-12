@@ -11,5 +11,6 @@ public interface ILoanService {
     Loan createLoan(CreateLoanDTO loanDTO);
     LoanDTO getLoan();
     Loan getLoanById(Long id);
+    Loan getLoanByProductId(Long productId);
     LoanDashboardDTO getLoanByIdForApp(Long id);
 }

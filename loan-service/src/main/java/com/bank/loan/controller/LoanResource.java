@@ -70,8 +70,9 @@ public class LoanResource {
 
     @GET
     @Path("/by-financial-product/{productId}")
-    public Response getLoanByFinancialProductId() {
-        return Response.ok().build();
+    public Response getLoanByFinancialProductId(@PathParam("productId") Long productId) {
+        Loan loan = _loanService.getLoanByProductId(productId);
+        return Response.ok(loan).build();
     }
 
     @GET
