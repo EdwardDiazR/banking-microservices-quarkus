@@ -2,125 +2,159 @@ package com.bank.loan;
 
 import com.bank.loan.constants.LoanStatus;
 import com.bank.loan.constants.PaymentFrequency;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Builder
+@Getter
+@Setter
+@Entity
+@Table(name = "loan")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Loan {
 
-    // =========================================================
-    // IDENTIFICACIÓN GENERAL
-    // =========================================================
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
-    public Long id;
-//    private FinancialProduct financialProduct;
+    @Column(name = "financial_product_id", unique = true)
+    private Long financialProductId;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private LoanStatus status;
+
+    @Column(name = "type")
     private String type;
+
+    @Column(name = "currency")
     private String currency;
 
-    // =========================================================
-    // MONTOS PRINCIPALES Y BALANCES
-    // =========================================================
+    @Column(name = "principal_amount")
+//    @DecimalMin(value = "1.00", message = "El préstamo debe ser mayor a 1")
+    private BigDecimal principalAmount; //Monto del desembolso
 
-    /** Monto desembolsado originalmente */
-    private BigDecimal principalAmount;
-
-    /** Monto disponible para futuros desembolsos (líneas de crédito) */
+    @Column(name = "available_amount_for_disbursement")
     private BigDecimal availableAmountForDisbursement;
 
-    /** Balance de capital pendiente */
-    private BigDecimal outstandingPrincipalAmount;
+    @Column(name = "outstanding_principal_balance")
+    private BigDecimal outstandingPrincipalAmount; //Monto de capital
 
-    /** Balance de intereses pendientes */
+    @Column(name = "interest_balance")
     private BigDecimal interestBalance;
 
-    /** Balance de mora acumulada */
-    private BigDecimal lateFeeBalance;
 
-    /** Balance total de la cuota (capital + interés + mora) */
-    private BigDecimal totalInstallmentBalance;
-
-    // =========================================================
-    // CONDICIONES FINANCIERAS DEL PRÉSTAMO
-    // =========================================================
-
-    /** Tasa de interés */
+    @Column(name = "interest_rate", precision = 12, scale = 10)
     private BigDecimal interestRate;
 
-    /** Plazo del préstamo en meses */
+    @Column(name = "term_in_months")
     private int termInMonths;
 
-    /** Frecuencia de pago */
-    private PaymentFrequency paymentFrequency;
+    @Column(name = "payment_frequency")
+    @Enumerated(EnumType.STRING)
+    private PaymentFrequency paymentFrequency; //Monthly, Weekly,Daily
 
-    /** Factor diario de interés */
+    @Column(name = "daily_interest_factor")
     private BigDecimal dailyInterestFactor;
 
-    /** Monto de la cuota */
-    private BigDecimal installmentAmount;
+    @Column(name = "installment_amount")
+    private BigDecimal installmentAmount; //Cuota
 
-    /** Tasa de mora */
+    @Column(name = "late_fee_rate", precision = 12, scale = 10)
+
     private BigDecimal lateFeeRate;
 
-    // =========================================================
-    // INTERESES Y CÁLCULOS ACUMULADOS
-    // =========================================================
+    @Column(name = "late_fee_balance")
+    private BigDecimal lateFeeBalance = BigDecimal.ZERO;
 
-    /** Intereses pagados hasta la fecha */
+    @Column(name = "total_installment_balance")
+    BigDecimal totalInstallmentBalance; // Installment + lateFeeBalance
+
+    @Column(name = "total_paid_interest")
     private BigDecimal totalPaidInterest;
 
-    /** Intereses proyectados del préstamo */
+    @Column(name = "projected_interest")
     private BigDecimal projectedInterest;
 
-    // =========================================================
-    // CICLOS Y SEGUIMIENTO DE PAGOS
-    // =========================================================
-
+    @Column(name = "one_cycle_times")
     private int oneCycleTimes;
+
+    @Column(name = "two_cycle_times")
     private int twoCycleTimes;
 
+    @Column(name = "payments_made")
     private Integer paymentsMade;
+
+    @Column(name = "payments_pending")
     private Integer paymentsPending;
 
-    // =========================================================
-    // FECHAS IMPORTANTES DEL PRÉSTAMO
-    // =========================================================
-
+    ///
+    @Column(name = "first_payment_date")
+    @Nullable
     private LocalDate firstPaymentDate;
-    private LocalDate nextPaymentDate;
-    private LocalDateTime lastPaymentDate;
 
-    private LocalDateTime lastInterestBalanceUpdateDate;
+    @Column(name = "next_payment_date")
+    @Nullable
+    private LocalDate nextPaymentDate;
+
+    @Column(name = "last_payment_date")
+    @Nullable
+    private LocalDateTime lastPaymentDate = null;
+
+    @Column(name = "interest_balance_update_date")
+    private LocalDateTime lastInterestBalanceUpdateDate = null;
+
+    @Column(name = "disbursement_amount_date")
+    @Nullable
     private LocalDateTime disbursementDate;
 
+    @Column(name = "last_interest_rate_review_date")
+    @Nullable
     private LocalDateTime lastInterestRateReviewDate;
+
+//    @Column(name = "next_interest_rate_review_date")
+//    @Nullable
+//    private LocalDateTime nextInterestRateReviewDate;
+
+    @Column(name = "due_date")
+    @Nullable
     private LocalDate dueDate;
 
+    @Column(name = "updated_at")
+    @Nullable
     private LocalDateTime updatedAt;
+    ///
 
-    // =========================================================
-    // CONFIGURACIÓN Y VINCULACIONES
-    // =========================================================
+    ///
 
-    /** Cuenta vinculada para pagos */
+    @Column(name = "linked_account")
+    @Nullable
     private Long linkedAccount;
 
-    /** Indica si permite débito automático */
+    @Convert(converter = BooleanToNumberConverter.class)
+    @Column(name = "can_auto_debit")
     private Boolean canAutoDebit;
 
-    /** Indica si es una línea de crédito */
+    @Convert(converter = BooleanToNumberConverter.class)
+    @Column(name = "is_line_of_credit")
     private Boolean isLineOfCredit;
 
-    /** Borrado lógico */
+    @Convert(converter = BooleanToNumberConverter.class)
+    @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    // =========================================================
-    // RELACIONES FUNCIONALES
-    // =========================================================
+   /* @Nullable
+    @OneToOne(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private AmortizationTable amortizationTable;
 
-  /*  private AmortizationTable amortizationTable;
+    @OneToMany(mappedBy = "loan", fetch = FetchType.LAZY)
     private List<LoanPayment> payments;*/
-
-
 }

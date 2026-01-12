@@ -2,9 +2,14 @@ package com.bank.loan;
 
 import com.bank.loan.dto.CreateLoanDTO;
 import com.bank.loan.dto.LoanDTO;
+import com.bank.loan.dto.LoanDashboardDTO;
+
+import java.util.Optional;
 
 public interface ILoanService {
 
-    void createLoan(CreateLoanDTO loanDTO);
+    Loan createLoan(CreateLoanDTO loanDTO);
     LoanDTO getLoan();
+    Loan getLoanById(Long id);
+    LoanDashboardDTO getLoanByIdForApp(Long id);
 }

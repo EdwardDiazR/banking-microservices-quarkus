@@ -2,47 +2,93 @@ package com.bank.loan.controller;
 
 import com.bank.CustomerClient;
 import com.bank.loan.ILoanService;
+import com.bank.loan.Loan;
+import com.bank.loan.dto.CreateLoanDTO;
 import com.bank.loan.dto.LoanDTO;
+import com.bank.loan.dto.LoanDashboardDTO;
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("api/v1/loan")
-@RolesAllowed("")
+@Produces(MediaType.APPLICATION_JSON)
+//@RolesAllowed({"CRM"})
 public class LoanResource {
-
-    @RestClient
-    CustomerClient customerClient;
 
     @Inject
     ILoanService _loanService;
 
-    public LoanResource() {
+    @Inject
+    SecurityIdentity identity;
+
+    @Inject
+    JsonWebToken jwt;
+
+    public void debug() {
+        System.out.println(identity.isAnonymous()); // false
+        System.out.println(identity.getRoles());     // [CUSTOMER]
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return customerClient.greet();
+    @Path("/")
+    public Response getLoans(){
+        return Response.ok().build();
     }
 
     @GET
-    @Path("{loanNumber}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public LoanDTO getLoanByLoanNumber() {
-        return _loanService.getLoan();
+    @Path("/{loanId}")
+    public Response getLoanById(@PathParam("loanId") Long loanId) {
+        try {
+            Loan loan = _loanService.getLoanById(loanId);
+            return Response.ok(loan).build();
+        } catch (Exception e) {
+            return Response.status(404, e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("ib/{loanId}")
+    public Response getLoanByIdForIB(@PathParam("loanId") Long loanId) {
+        try {
+            LoanDashboardDTO loan = _loanService.getLoanByIdForApp(loanId);
+            return Response.ok(loan).build();
+        } catch (Exception e) {
+            return Response.status(404, e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/")
+    public Response createLoan(CreateLoanDTO createLoanDTO) {
+        Loan loan = _loanService.createLoan(createLoanDTO);
+        return Response.ok(loan).build();
+    }
+
+    @GET
+    @Path("/by-financial-product/{productId}")
+    public Response getLoanByFinancialProductId() {
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/by-financial-products")
+    public Response getLoansByFinancialProducts(Long[] productsId) {
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/{loanId}/amortization")
+    public Response getLoanAmortizationTableByLoanId() {
+        return Response.ok().build();
     }
 
     @PATCH
-    @Path("change-payment-date")
-    public Response changePaymentDate(){
+    @Path("/{loanId}/change-payment-date")
+    public Response changePaymentDate() {
         return Response.ok("Date changed successfully").build();
     }
-
 }
