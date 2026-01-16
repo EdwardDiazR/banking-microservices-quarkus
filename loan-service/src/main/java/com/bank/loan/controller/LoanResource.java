@@ -16,6 +16,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("api/v1/loan")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 //@RolesAllowed({"CRM"})
 public class LoanResource {
 
@@ -35,7 +36,7 @@ public class LoanResource {
 
     @GET
     @Path("/")
-    public Response getLoans(){
+    public Response getLoans() {
         return Response.ok().build();
     }
 
@@ -67,12 +68,26 @@ public class LoanResource {
         Loan loan = _loanService.createLoan(createLoanDTO);
         return Response.ok(loan).build();
     }
+    public record ApiResponse(String message) {}
 
     @GET
     @Path("/by-financial-product/{productId}")
     public Response getLoanByFinancialProductId(@PathParam("productId") Long productId) {
-        Loan loan = _loanService.getLoanByProductId(productId);
-        return Response.ok(loan).build();
+        try {
+            Loan loan = _loanService.getLoanByProductId(productId);
+            return Response.ok(loan).build();
+        } catch (NotFoundException notFoundException) {
+            System.out.println("Entro aqui notfound");
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity(new ApiResponse( notFoundException.getMessage()))
+                    .build();
+
+        } catch (Exception e) {
+            System.out.println("Entro aqui exception");
+
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @GET

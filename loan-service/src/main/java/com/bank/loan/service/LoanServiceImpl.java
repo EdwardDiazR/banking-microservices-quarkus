@@ -53,7 +53,9 @@ public class LoanServiceImpl implements ILoanService {
     }
 
     public Loan getLoanByProductId(Long productId) {
-        return loanRepository.getByProductId(productId).orElseThrow();
+        final String notFoundMessage = String.format("Prestamo con productId %s, no existe",productId.toString());
+        return loanRepository.getByProductId(productId)
+                .orElseThrow(()-> new NotFoundException(notFoundMessage));
     }
 
     @Override
