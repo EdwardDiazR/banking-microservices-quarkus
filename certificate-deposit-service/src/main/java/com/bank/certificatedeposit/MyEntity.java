@@ -1,4 +1,4 @@
-package com.bank;
+package com.bank.certificatedeposit;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
